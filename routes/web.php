@@ -20,6 +20,9 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
+Route::middleware('auth', 'admin')->get('/admin', function () {
+    return view('admin.dashboard');
+});
 
 Route::get('login/{provider}', [AuthenticatedSessionController::class, 'redirectToProvider'])->name('login.provider');
 Route::get('login/{provider}/callback', [AuthenticatedSessionController::class, 'handleProviderCallback'])->name('login.provider.callback');    
