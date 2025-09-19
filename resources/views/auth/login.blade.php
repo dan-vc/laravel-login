@@ -32,7 +32,7 @@
             </label>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <div class="flex items-center justify-end my-4">
             @if (Route::has('password.request'))
                 <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
                     {{ __('Forgot your password?') }}
@@ -43,5 +43,14 @@
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
+
+        <a href="{{ route('login.provider', ['provider' => 'google']) }}" class="flex items-center gap-2 justify-center border p-3 rounded-lg cursor-pointer hover:bg-blue-100 transition-all duration-300 font-bold mb-2">
+            <img src="https://techdocs.akamai.com/identity-cloud/img/social-login/identity-providers/iconfinder-new-google-favicon-682665.png" alt="Google Icon" width="30">
+            Sign in with Google
+        </a>
+        <a href="{{ route('login.provider', ['provider' => 'github']) }}" class="flex items-center gap-2 justify-center border p-3 rounded-lg cursor-pointer hover:bg-gray-100 transition-all duration-300 font-bold">
+            <img src="https://images.icon-icons.com/3685/PNG/512/github_logo_icon_229278.png" alt="Google Icon" width="30">
+            Sign in with Github
+        </a>
     </form>
 </x-guest-layout>

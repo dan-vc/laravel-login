@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -43,5 +46,38 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    public function redirectToProvider($provider)
+    {
+        return Socialite::driver($provider)->redirect();
+    }
+
+    public function handleProviderCallback($provider)
+    {
+        try {
+            $providerUser = Socialite::driver($provider)->user();
+
+            $user = User::firstOrCreate(
+                ['email' => $providerUser->email], // Busca por email
+                [
+                    'name' => $providerUser->name ?? $providerUser->nickname,
+                ]
+            );
+
+            $user->socialAccounts()->updateOrCreate(
+                [
+                    'provider' => $provider,
+                    'provider_id' => $providerUser->id,
+                ]
+            );
+
+            Auth::login($user);
+
+            return redirect('dashboard');
+
+        } catch (Exception $e) {
+            dd($e);
+        }
     }
 }
